@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Charts Examples</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.1/dist/echarts.min.js"></script>
+  </head>
+  <body>
+    <div
+      id="productsChart"
+      style="width: 800px; height: 600px"
+    ></div>
+  </body>
+  <script>
+    let myChart = echarts.init(document.getElementById('productsChart'));
+
+    fetch("https://fakestoreapi.com/products")
+    .then(response => response.json())
+    .then(json => {
+      let objectOfCategories = {}
+      json.forEach(product => { // create object with category as key and count as value
+        product.category in objectOfCategories ? objectOfCategories[product.category]++ : objectOfCategories[product.category] = 1})
+
+      let listOfCategories = Object.keys(objectOfCategories); // array of categories
+      let countOfCategories = listOfCategories.map(key => objectOfCategories[key]) // array of count of categories
+
+      myChart.setOption({
+      title: {
+        text: 'Asynchronous Loading Example'
+      },
+      tooltip: {},
+      legend: {
+        data: ["Categories"]
+      },
+      xAxis: {
+        data: listOfCategories,
+      },
+      yAxis: {},
+      series: [
+        {
+          name: 'Categories',
+          type: 'bar',
+          data: countOfCategories,
+        }
+      ]
+    });
+    })
+  </script>
+</html>
